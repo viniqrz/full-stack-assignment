@@ -1,8 +1,9 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import { getOneUser } from "../services/getOneUser";
-import { AlbumPreview } from "../components";
 import { getAlbumsByUser } from "../services";
+import { AlbumsList } from "../components/AlbumsList";
+import { useSession } from "../hooks/useSession";
 
 export const Profile = () => {
   const { userId } = useParams();
@@ -14,6 +15,8 @@ export const Profile = () => {
   } = useQuery(["user", userId], () => getOneUser(userId!), {
     enabled: !!userId,
   });
+
+  const { user: myUser } = useSession();
 
   const { data: albums = [] } = useQuery(
     ["albums", userId],
@@ -46,14 +49,10 @@ export const Profile = () => {
   return (
     <div>
       <h1>{user.name}</h1>
+      {myUser?.id === user.id && <p>👑 YOUR PROFILE</p>}
       <p>Username: {user.username}</p>
       <p>Email: {user.email}</p>
-      <h2>Albums</h2>
-      <div className="albums">
-        {albums.map((album, index) => (
-          <AlbumPreview key={`album-${index}`} album={album} />
-        ))}
-      </div>
+      <AlbumsList albums={albums} />
     </div>
   );
 };
