@@ -10,8 +10,8 @@ const StyledList = styled.ul`
   border-radius: 5px;
   border: 1px solid #ccc;
   margin: 1rem auto;
-  max-width: 95%;
-  width: 960px;
+  max-width: 960px;
+  width: 95%;
   background-color: #f9f9f975;
 `;
 

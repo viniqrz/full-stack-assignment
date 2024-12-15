@@ -6,9 +6,10 @@ import { useMutation } from "react-query";
 import { createPhoto } from "../services/createPhoto";
 import { useFormik } from "formik";
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TextField } from "@mui/material";
 import { PhotoModal } from "./PhotoModal";
+import { deletePhoto } from "../services";
 
 const StyledForm = styled.form`
   display: flex;
@@ -33,16 +34,17 @@ const StyledPhotosContainer = styled.div`
 export const PhotosList: React.FC<{
   album: Album;
   photos: Photo[];
-}> = ({ photos, album }) => {
-  const isAlbumEmpty = !photos.length;
-
+}> = ({ photos = [], album }) => {
   const { user: myUser } = useSession();
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  // This is a local state to store the photos created by the user
-  const [localPhotos, setLocalPhotos] = useState<Photo[]>([]);
-
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+
+  // This is a local state, since the dummy API doesn't persist changes
+  const [localPhotos, setLocalPhotos] = useState<Photo[]>([]);
+  useEffect(() => {
+    setLocalPhotos(photos);
+  }, [photos]);
 
   const formik = useFormik({
     initialValues: {
@@ -81,9 +83,15 @@ export const PhotosList: React.FC<{
       },
     });
 
-  if (isAlbumEmpty) {
-    return <p>Album is empty</p>;
-  }
+  const { mutate: deletePhotoMutate } = useMutation(
+    "deletePhoto",
+    deletePhoto,
+    {
+      onSuccess: () => {
+        setSelectedPhoto(null);
+      },
+    }
+  );
 
   return (
     <div>
@@ -123,16 +131,29 @@ export const PhotosList: React.FC<{
           </LoadingButton>
         </StyledForm>
       )}
+      <h3>Photos (Click to expand)</h3>
       <StyledPhotosContainer>
-        {[...localPhotos, ...photos].map((photo, index) => (
-          <Thumb
-            key={`photo-${index}`}
-            src={photo.thumbnailUrl}
-            alt={photo.title}
-            onSelect={() => setSelectedPhoto(photo)}
-            className="photo"
-          />
-        ))}
+        {localPhotos.length ? (
+          localPhotos.map((photo, index) => (
+            <Thumb
+              key={`photo-${index}`}
+              src={photo.thumbnailUrl}
+              alt={photo.title}
+              onSelect={() => setSelectedPhoto(photo)}
+              onDelete={
+                myUser?.id === album.userId
+                  ? () => {
+                      setLocalPhotos(localPhotos.filter((p) => p !== photo));
+                      deletePhotoMutate(photo.id);
+                    }
+                  : undefined
+              }
+              className="photo"
+            />
+          ))
+        ) : (
+          <h3>No photos yet!</h3>
+        )}
       </StyledPhotosContainer>
       {selectedPhoto && (
         <PhotoModal

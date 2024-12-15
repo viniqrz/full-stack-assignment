@@ -12,20 +12,24 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const { refetch } = useQuery("user", () => getOneUser(DEFAULT_USER_ID), {
-    onSuccess: (data) => {
-      setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
-      api.interceptors.request.use((config) => {
-        config.auth = {
-          username: data.email,
-          password: "", // no password for now
-        };
-        return config;
-      });
-    },
-    enabled: false,
-  });
+  const { refetch } = useQuery(
+    "sessionUser",
+    () => getOneUser(DEFAULT_USER_ID),
+    {
+      onSuccess: (data) => {
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data));
+        api.interceptors.request.use((config) => {
+          config.auth = {
+            username: data.email,
+            password: "", // no password for now
+          };
+          return config;
+        });
+      },
+      enabled: false,
+    }
+  );
 
   useEffect(() => {
     console.log("Starting session provider...");
