@@ -1,4 +1,5 @@
 version: "3.8"
+# Docker Compose version 2.x.x
 
 services:
   frontend:
