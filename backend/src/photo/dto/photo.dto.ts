@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IPhoto } from '../interfaces/photo.interface';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class PhotoDto implements IPhoto {
   @ApiProperty()
@@ -10,12 +10,12 @@ export class PhotoDto implements IPhoto {
   @IsNumber()
   id: number;
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   title: string;
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   url: string;
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   thumbnailUrl: string;
 }

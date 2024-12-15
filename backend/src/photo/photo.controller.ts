@@ -1,13 +1,14 @@
 import { Controller, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { PhotoDto } from './dto/photo.dto';
+import { CreatePhotoDto } from './dto/create-photo.dto';
 
 @Controller('photos')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
   @Post()
-  create(@Body() createPhotoDto: PhotoDto): Promise<PhotoDto> {
+  create(@Body() createPhotoDto: CreatePhotoDto): Promise<PhotoDto> {
     return this.photoService.create(createPhotoDto);
   }
 

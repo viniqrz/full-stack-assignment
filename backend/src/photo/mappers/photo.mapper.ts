@@ -1,11 +1,14 @@
+import { CreatePhotoDto } from '../dto/create-photo.dto';
 import { PhotoDto } from '../dto/photo.dto';
 import { Photo } from '../entities/photo.entity';
 
 export class PhotoMapper {
-  static fromDto(photoDto: PhotoDto) {
+  static fromDto(photoDto: PhotoDto | CreatePhotoDto) {
     const photo = new Photo();
+    if ('id' in photoDto) {
+      photo.id = photoDto.id;
+    }
     photo.albumId = photoDto.albumId;
-    photo.id = photoDto.id;
     photo.title = photoDto.title;
     photo.url = photoDto.url;
     photo.thumbnailUrl = photoDto.thumbnailUrl;

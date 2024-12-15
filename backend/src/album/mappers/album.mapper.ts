@@ -1,10 +1,13 @@
 import { AlbumDto } from '../dto/album.dto';
+import { CreateAlbumDto } from '../dto/create-album.dto';
 import { Album } from '../entities/album.entity';
 
 export class AlbumMapper {
-  static fromDto(albumDto: AlbumDto) {
+  static fromDto(albumDto: AlbumDto | CreateAlbumDto) {
     const album = new Album();
-    album.id = albumDto.id;
+    if ('id' in albumDto) {
+      album.id = albumDto.id;
+    }
     album.title = albumDto.title;
     album.userId = albumDto.userId;
     return album;

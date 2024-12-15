@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JsonPlaceholderAdapter } from '../common/adapters/json-placeholder.adapter';
 import { PhotoDto } from './dto/photo.dto';
 import { PhotoMapper } from './mappers/photo.mapper';
+import { CreatePhotoDto } from './dto/create-photo.dto';
 
 @Injectable()
 export class PhotoService {
@@ -9,7 +10,7 @@ export class PhotoService {
     private readonly jsonPlaceholderAdapter: JsonPlaceholderAdapter,
   ) {}
 
-  async create(createPhotoDto: PhotoDto) {
+  async create(createPhotoDto: CreatePhotoDto) {
     return PhotoMapper.toDto(
       await this.jsonPlaceholderAdapter.createPhoto(
         PhotoMapper.fromDto(createPhotoDto),
@@ -17,7 +18,7 @@ export class PhotoService {
     );
   }
 
-  async findAllByAlbumId(albumId: string) {
+  async findAllByAlbumId(albumId: number) {
     return PhotoMapper.toDtoList(
       await this.jsonPlaceholderAdapter.getPhotosByAlbum(albumId),
     );

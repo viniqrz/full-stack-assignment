@@ -4,6 +4,7 @@ import { AlbumDto } from './dto/album.dto';
 import { PhotoService } from '../photo/photo.service';
 import { AlbumMapper } from './mappers/album.mapper';
 import { PhotoMapper } from '../photo/mappers/photo.mapper';
+import { CreateAlbumDto } from './dto/create-album.dto';
 
 @Injectable()
 export class AlbumService {
@@ -12,7 +13,7 @@ export class AlbumService {
     private readonly photoService: PhotoService,
   ) {}
 
-  async create(albumDto: AlbumDto) {
+  async create(albumDto: CreateAlbumDto) {
     return AlbumMapper.toDto(
       await this.jsonPlaceholderAdapter.createAlbum(
         AlbumMapper.fromDto(albumDto),
@@ -25,13 +26,17 @@ export class AlbumService {
   }
 
   async findAlbumPhotos(albumId: string) {
-    const photos = await this.photoService.findAllByAlbumId(albumId);
+    const photos = await this.photoService.findAllByAlbumId(+albumId);
     return PhotoMapper.toDtoList(photos);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, withPhotos = false) {
     const album = await this.jsonPlaceholderAdapter.getAlbum(id);
-    return AlbumMapper.toDto(album);
+    const albumDto = AlbumMapper.toDto(album);
+    if (withPhotos) {
+      albumDto.photos = await this.photoService.findAllByAlbumId(album.id);
+    }
+    return albumDto;
   }
 
   async update(updateAlbumDto: AlbumDto) {

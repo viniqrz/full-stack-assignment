@@ -14,11 +14,14 @@ export const Profile = () => {
     isError,
   } = useQuery(["user", userId], () => getOneUser(userId!), {
     enabled: !!userId,
+    onSuccess: () => {
+      refetchAlbums();
+    },
   });
 
   const { user: myUser } = useSession();
 
-  const { data: albums = [] } = useQuery(
+  const { data: albums = [], refetch: refetchAlbums } = useQuery(
     ["albums", userId],
     () => getAlbumsByUser(userId!),
     {
@@ -52,7 +55,7 @@ export const Profile = () => {
       {myUser?.id === user.id && <p>👑 YOUR PROFILE</p>}
       <p>Username: {user.username}</p>
       <p>Email: {user.email}</p>
-      <AlbumsList albums={albums} />
+      <AlbumsList user={user} albums={albums} />
     </div>
   );
 };

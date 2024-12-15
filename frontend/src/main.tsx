@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { SessionProvider } from "./contexts/Session.tsx";
+import { SessionProvider } from "./contexts/SessionContext/SessionProvider.tsx";
 import { ThemeProvider } from "@mui/material";
 
 import "@fontsource/roboto/300.css";

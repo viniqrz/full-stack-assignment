@@ -47,7 +47,7 @@ export class JsonPlaceholderAdapter {
     }
   }
 
-  async getPhotosByAlbum(albumId: string): Promise<Photo[]> {
+  async getPhotosByAlbum(albumId: number): Promise<Photo[]> {
     try {
       const { data } = await this.httpService.axiosRef.get(
         `/albums/${albumId}/photos`,
