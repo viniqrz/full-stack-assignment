@@ -37,10 +37,15 @@ const StyledNav = styled.nav`
 export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const { user } = useSession();
+  const location = window.location.pathname;
   return (
     <div>
       <StyledNav>
-        <IconButton onClick={() => navigate(-1)}>
+        <IconButton
+          disabled={location === "/"}
+          style={{ opacity: location === "/" ? 0 : 1 }}
+          onClick={() => navigate(-1)}
+        >
           <ArrowBackIcon style={{ fill: "white" }} />
         </IconButton>
         <h1 onClick={() => navigate(ROUTES.HOME())}>PhotoApp</h1>
