@@ -15,7 +15,16 @@ export const PhotoModal: React.FC<{
       }}
       onClose={onClose}
     >
-      <img src={photo.url} alt={photo.title} />
+      <img
+        style={{
+          width: "600px",
+          height: "600px",
+          maxWidth: "90%",
+          objectFit: "contain",
+        }}
+        src={photo.url}
+        alt={photo.title}
+      />
     </Modal>
   );
 };
