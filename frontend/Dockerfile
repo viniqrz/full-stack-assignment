@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--port", "3000"]
